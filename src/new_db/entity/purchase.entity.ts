@@ -40,8 +40,4 @@ export class Purchase {
 
   @CreateDateColumn()
   created: Date;
-
-  toJSON() {
-    return { ...this };
-  }
 }

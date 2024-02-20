@@ -41,16 +41,4 @@ export class Statistic {
 
   @CreateDateColumn()
   created: Date;
-
-  toJSON() {
-    return {
-      id: this.id,
-      messageId: this.messageId,
-      count: this.count,
-      opened: this.opened,
-      type: this.type,
-      osType: this.osType,
-      created: Math.round(this.created.getTime() / 1000),
-    };
-  }
 }

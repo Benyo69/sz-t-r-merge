@@ -66,8 +66,4 @@ export class DictionaryUser {
 
   @CreateDateColumn()
   created: Date;
-
-  toJSON() {
-    return { ...this };
-  }
 }

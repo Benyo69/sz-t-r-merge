@@ -42,15 +42,4 @@ export class PushMessage {
 
   @CreateDateColumn()
   created: Date;
-
-  toJSON() {
-    return {
-      id: this.id,
-      title: this.title,
-      message: this.message,
-      users: this.users,
-      messageId: this.messageId,
-      created: this.created.getTime(),
-    };
-  }
 }

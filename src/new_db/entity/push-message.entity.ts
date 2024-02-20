@@ -42,10 +42,4 @@ export class PushMessage {
 
   @CreateDateColumn()
   created: Date;
-
-  toJSON() {
-    return {
-      ...this,
-    };
-  }
 }

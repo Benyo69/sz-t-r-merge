@@ -17,9 +17,6 @@ export class Purchase {
   @Column({ nullable: true })
   purchaseToken: string;
 
-  @Column({ unsigned: true })
-  userId: number;
-
   @ManyToOne(() => DictionaryUser, (user) => user.purchases, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
@@ -40,8 +37,4 @@ export class Purchase {
 
   @CreateDateColumn()
   created: Date;
-
-  toJSON() {
-    return { ...this };
-  }
 }

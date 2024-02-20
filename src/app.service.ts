@@ -33,7 +33,7 @@ export class AppService {
     @InjectRepository(TestEntities.Statistic, 'thirdDB')
     private readonly testStatRepository: Repository<TestEntities.Statistic>,
   ) {}
-  async getHello() {
+  async getHello(data?: any) {
     //!Delete existing one until testing
     // const test = await this.testDictionaryUserRepository.find();
     // for (const te of test) {
@@ -54,16 +54,35 @@ export class AppService {
     //   await this.testStatRepository.delete(te.id);
     // }
 
+    if (data) {
+      let response = [];
+      const newOriginal = data.newUserData.filter(
+        (user) => user.szotarId !== '',
+      );
+      response = [...newOriginal];
+
+      const trueOldUsers = data.oldUserData.filter(
+        (user) =>
+          !newOriginal.some((newOri) => newOri.szotarId === user.szotarId),
+      );
+
+      const cleanOldUsers = trueOldUsers.filter((tou) => {
+        delete tou.id;
+        if (tou.szotarId.length > 0) {
+          return tou;
+        }
+      });
+      response = [...response, ...cleanOldUsers];
+
+      return response;
+    }
+
     // //!User
     const newOriginal = await this.newDictionaryUserRepository.find({
       where: { szotarId: Not('') },
     });
 
-    for (const ori of newOriginal) {
-      await this.testDictionaryUserRepository.save({
-        ...ori,
-      });
-    }
+    await this.testDictionaryUserRepository.save([...newOriginal]);
 
     const newIds = newOriginal.map((newOri) => newOri.szotarId);
 
@@ -92,7 +111,8 @@ export class AppService {
 
     await this.testDictionaryUserRepository.save([...cleanOldUsers]);
 
-    //!Purchase
+    // //!Purchase
+
     const newPurchases = await this.newPurchaseRepository.find();
 
     await this.testPurchaseRepository.save([...newPurchases]);
@@ -209,7 +229,5 @@ export class AppService {
         dictionaryUsers: newUsers,
       });
     }
-
-    return;
   }
 }

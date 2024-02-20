@@ -22,7 +22,7 @@ import { MigrationModule } from './migration.module';
           password: process.env.OLD_TYPEORM_PASSWORD,
           database: process.env.OLD_TYPEORM_DATABASE,
           migrationsTransactionMode: 'none',
-          synchronize: false,
+          synchronize: true,
           entities: [
             oldEntities.Purchase,
             oldEntities.DictionaryUser,
@@ -45,7 +45,7 @@ import { MigrationModule } from './migration.module';
           password: process.env.NEW_TYPEORM_PASSWORD,
           database: process.env.NEW_TYPEORM_DATABASE,
           migrationsTransactionMode: 'none',
-          synchronize: false,
+          synchronize: true,
           entities: [
             newEntities.Purchase,
             newEntities.DictionaryUser,
@@ -68,7 +68,7 @@ import { MigrationModule } from './migration.module';
           password: process.env.TEST_ON_LOCAL_TYPEORM_PASSWORD,
           database: process.env.TEST_ON_LOCAL_TYPEORM_DATABASE,
           migrationsTransactionMode: 'none',
-          synchronize: false,
+          synchronize: true,
           entities: [
             testEntities.Purchase,
             testEntities.DictionaryUser,

@@ -1,22 +1,407 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { INestApplication } from '@nestjs/common';
+import { AppModule } from './app.module';
+import { AppService } from './app.service'; // Import the AppService
 
-describe('AppController', () => {
-  let appController: AppController;
+describe('AppController (e2e)', () => {
+  let app: INestApplication;
+  let appService: AppService; // Declare AppService here
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
-      providers: [AppService],
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    app = moduleFixture.createNestApplication();
+    await app.init();
+
+    appService = moduleFixture.get<AppService>(AppService); // Get AppService here
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
-    });
+  it('should fetch data correctly', async () => {
+    // Mock the repository methods as needed
+
+    const newUserData = [
+      {
+        id: 1,
+        szotarId: '55',
+        name: 'newName1',
+        facebookId: 'newFacebook1',
+        email: 'newEmail1',
+        appleId: 'newAppleId1',
+        googleId: 'newGoogleId1',
+        gotPopup: false,
+        pushAvailable: false,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        id: 2,
+        szotarId: '22',
+        name: 'oldName2',
+        facebookId: 'oldFacebook2',
+        email: 'oldEmail2',
+        appleId: 'oldAppleId2',
+        googleId: 'oldGoogleId2',
+        gotPopup: false,
+        pushAvailable: true,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        id: 3,
+        szotarId: '66',
+        name: 'newName3',
+        facebookId: 'newFacebook3',
+        email: 'newEmail3',
+        appleId: 'newAppleId3',
+        googleId: 'newGoogleId3',
+        gotPopup: true,
+        pushAvailable: true,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        id: 4,
+        szotarId: '44',
+        name: 'oldName4',
+        facebookId: 'oldFacebook4',
+        email: 'oldEmail4',
+        appleId: 'oldAppleId4',
+        googleId: 'oldGoogleId4',
+        gotPopup: false,
+        pushAvailable: false,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        id: 5,
+        szotarId: '',
+        name: '',
+        facebookId: 'x',
+        email: 'x',
+        appleId: 'x',
+        googleId: 'x',
+        gotPopup: false,
+        pushAvailable: false,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+    ];
+    const oldUserData = [
+      {
+        /* mock data */
+        id: 1,
+        szotarId: '11',
+        name: 'oldName1',
+        facebookId: 'oldFacebook1',
+        email: 'oldEmail1',
+        appleId: 'oldAppleId1',
+        googleId: 'oldGoogleId1',
+        gotPopup: false,
+        pushAvailable: false,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        /* mock data */
+        id: 2,
+        szotarId: '22',
+        name: 'oldName2',
+        facebookId: 'oldFacebook2',
+        email: 'oldEmail2',
+        appleId: 'oldAppleId2',
+        googleId: 'oldGoogleId2',
+        gotPopup: false,
+        pushAvailable: true,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        /* mock data */
+        id: 3,
+        szotarId: '33',
+        name: 'oldName3',
+        facebookId: 'oldFacebook3',
+        email: 'oldEmail3',
+        appleId: 'oldAppleId3',
+        googleId: 'oldGoogleId3',
+        gotPopup: true,
+        pushAvailable: true,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        /* mock data */
+        id: 4,
+        szotarId: '44',
+        name: 'oldName4',
+        facebookId: 'oldFacebook4',
+        email: 'oldEmail4',
+        appleId: 'oldAppleId4',
+        googleId: 'oldGoogleId4',
+        gotPopup: false,
+        pushAvailable: false,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+    ];
+
+    const newPurcahseData = [
+      {
+        id: 1,
+        purchaseToken: String(new Date().getTime()),
+        userId: 1,
+        user: newUserData.find((user) => user.id === 1),
+        bundleKey: 'gibsish',
+        orderId: '7',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+      {
+        id: 2,
+        purchaseToken: String(new Date().getTime()),
+        userId: 1,
+        user: newUserData.find((user) => user.id === 1),
+        bundleKey: 'gibsish',
+        orderId: '8',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+      {
+        id: 3,
+        purchaseToken: String(new Date().getTime()),
+        userId: 4,
+        user: newUserData.find((user) => user.id === 4),
+        bundleKey: 'new gibsish',
+        orderId: '9',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+      {
+        id: 4,
+        purchaseToken: String(new Date().getTime()),
+        userId: 2,
+        user: newUserData.find((user) => user.id === 2),
+        bundleKey: 'new gibsish',
+        orderId: '10',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+      {
+        id: 5,
+        purchaseToken: String(new Date().getTime()),
+        userId: 4,
+        user: newUserData.find((user) => user.id === 4),
+        bundleKey: 'new gibsish',
+        orderId: '11',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+      {
+        id: 6,
+        purchaseToken: String(new Date().getTime()),
+        userId: 5,
+        user: newUserData.find((user) => user.id === 5),
+        bundleKey: 'new gibsish',
+        orderId: '12',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+    ];
+
+    const oldPurcahseData = [
+      {
+        id: 1,
+        purchaseToken: String(new Date().getTime()),
+        userId: 1,
+        user: oldUserData.find((user) => user.id === 1),
+        bundleKey: 'gibsish',
+        orderId: '1',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+      {
+        id: 2,
+        purchaseToken: String(new Date().getTime()),
+        userId: 1,
+        user: oldUserData.find((user) => user.id === 1),
+        bundleKey: 'gibsish',
+        orderId: '2',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+      {
+        id: 3,
+        purchaseToken: String(new Date().getTime()),
+        userId: 4,
+        user: oldUserData.find((user) => user.id === 4),
+        bundleKey: 'new gibsish',
+        orderId: '3',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+      {
+        id: 4,
+        purchaseToken: String(new Date().getTime()),
+        userId: 2,
+        user: oldUserData.find((user) => user.id === 2),
+        bundleKey: 'new gibsish',
+        orderId: '4',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+      {
+        id: 5,
+        purchaseToken: String(new Date().getTime()),
+        userId: 4,
+        user: oldUserData.find((user) => user.id === 4),
+        bundleKey: 'new gibsish',
+        orderId: '5',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+      {
+        id: 6,
+        purchaseToken: String(new Date().getTime()),
+        userId: 5,
+        user: oldUserData.find((user) => user.id === 5),
+        bundleKey: 'new gibsish',
+        orderId: '6',
+        orderPayload: 'hahahahahaha',
+        valid: new Date('2024-02-20T18:15:15.977Z'),
+        created: new Date('2024-02-20T18:15:15.977Z'),
+      },
+    ];
+
+    const data = {
+      newUserData: newUserData,
+      oldUserData: oldUserData,
+    };
+
+    const result = await appService.getHello(data);
+
+    expect(result).toStrictEqual([
+      {
+        id: 1,
+        szotarId: '55',
+        name: 'newName1',
+        facebookId: 'newFacebook1',
+        email: 'newEmail1',
+        appleId: 'newAppleId1',
+        googleId: 'newGoogleId1',
+        gotPopup: false,
+        pushAvailable: false,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        id: 2,
+        szotarId: '22',
+        name: 'oldName2',
+        facebookId: 'oldFacebook2',
+        email: 'oldEmail2',
+        appleId: 'oldAppleId2',
+        googleId: 'oldGoogleId2',
+        gotPopup: false,
+        pushAvailable: true,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        id: 3,
+        szotarId: '66',
+        name: 'newName3',
+        facebookId: 'newFacebook3',
+        email: 'newEmail3',
+        appleId: 'newAppleId3',
+        googleId: 'newGoogleId3',
+        gotPopup: true,
+        pushAvailable: true,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        id: 4,
+        szotarId: '44',
+        name: 'oldName4',
+        facebookId: 'oldFacebook4',
+        email: 'oldEmail4',
+        appleId: 'oldAppleId4',
+        googleId: 'oldGoogleId4',
+        gotPopup: false,
+        pushAvailable: false,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        szotarId: '11',
+        name: 'oldName1',
+        facebookId: 'oldFacebook1',
+        email: 'oldEmail1',
+        appleId: 'oldAppleId1',
+        googleId: 'oldGoogleId1',
+        gotPopup: false,
+        pushAvailable: false,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+      {
+        szotarId: '33',
+        name: 'oldName3',
+        facebookId: 'oldFacebook3',
+        email: 'oldEmail3',
+        appleId: 'oldAppleId3',
+        googleId: 'oldGoogleId3',
+        gotPopup: true,
+        pushAvailable: true,
+        messages: null,
+        purchases: null,
+        created: new Date('2024-02-20T18:15:15.977Z'),
+        statistic: null,
+      },
+    ]);
+  });
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 });
