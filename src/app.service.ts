@@ -42,7 +42,7 @@ export class AppService {
     private readonly testActivityRepository: Repository<TestEntities.UserActivity>,
   ) {}
 
-  async getHello(x?: any, y?: any) {
+  async getHello() {
     //!Delete existing one until testing
     // const test = await this.testDictionaryUserRepository.find();
     // for (const te of test) {
@@ -62,326 +62,6 @@ export class AppService {
     // for (const te of testSta) {
     //   await this.testStatRepository.delete(te.id);
     // }
-    let userResponse = [];
-    const newUserData = [
-      {
-        id: 1,
-        szotarId: '55',
-        name: 'newName1',
-        facebookId: 'newFacebook1',
-        email: 'newEmail1',
-        appleId: 'newAppleId1',
-        googleId: 'newGoogleId1',
-        gotPopup: false,
-        pushAvailable: false,
-        messages: null,
-        purchases: null,
-        created: new Date('2024-02-20T18:15:15.977Z'),
-        statistic: null,
-      },
-      {
-        id: 2,
-        szotarId: '22',
-        name: 'oldName2',
-        facebookId: 'oldFacebook2',
-        email: 'oldEmail2',
-        appleId: 'oldAppleId2',
-        googleId: 'oldGoogleId2',
-        gotPopup: false,
-        pushAvailable: true,
-        messages: null,
-        purchases: null,
-        created: new Date('2024-02-20T18:15:15.977Z'),
-        statistic: null,
-      },
-      {
-        id: 3,
-        szotarId: '66',
-        name: 'newName3',
-        facebookId: 'newFacebook3',
-        email: 'newEmail3',
-        appleId: 'newAppleId3',
-        googleId: 'newGoogleId3',
-        gotPopup: true,
-        pushAvailable: true,
-        messages: null,
-        purchases: null,
-        created: new Date('2024-02-20T18:15:15.977Z'),
-        statistic: null,
-      },
-      {
-        id: 4,
-        szotarId: '44',
-        name: 'oldName4',
-        facebookId: 'oldFacebook4',
-        email: 'oldEmail4',
-        appleId: 'oldAppleId4',
-        googleId: 'oldGoogleId4',
-        gotPopup: false,
-        pushAvailable: false,
-        messages: null,
-        purchases: null,
-        created: new Date('2024-02-20T18:15:15.977Z'),
-        statistic: null,
-      },
-      {
-        id: 5,
-        szotarId: '',
-        name: '',
-        facebookId: 'x',
-        email: 'x',
-        appleId: 'x',
-        googleId: 'x',
-        gotPopup: false,
-        pushAvailable: false,
-        messages: null,
-        purchases: null,
-        created: new Date('2024-02-20T18:15:15.977Z'),
-        statistic: null,
-      },
-    ];
-    const oldUserData = [
-      {
-        /* mock data */
-        id: 1,
-        szotarId: '11',
-        name: 'oldName1',
-        facebookId: 'oldFacebook1',
-        email: 'oldEmail1',
-        appleId: 'oldAppleId1',
-        googleId: 'oldGoogleId1',
-        gotPopup: false,
-        pushAvailable: false,
-        messages: null,
-        purchases: null,
-        created: new Date('2024-02-20T18:15:15.977Z'),
-        statistic: null,
-      },
-      {
-        /* mock data */
-        id: 2,
-        szotarId: '22',
-        name: 'oldName2',
-        facebookId: 'oldFacebook2',
-        email: 'oldEmail2',
-        appleId: 'oldAppleId2',
-        googleId: 'oldGoogleId2',
-        gotPopup: false,
-        pushAvailable: true,
-        messages: null,
-        purchases: null,
-        created: new Date('2024-02-20T18:15:15.977Z'),
-        statistic: null,
-      },
-      {
-        /* mock data */
-        id: 3,
-        szotarId: '33',
-        name: 'oldName3',
-        facebookId: 'oldFacebook3',
-        email: 'oldEmail3',
-        appleId: 'oldAppleId3',
-        googleId: 'oldGoogleId3',
-        gotPopup: true,
-        pushAvailable: true,
-        messages: null,
-        purchases: null,
-        created: new Date('2024-02-20T18:15:15.977Z'),
-        statistic: null,
-      },
-      {
-        /* mock data */
-        id: 4,
-        szotarId: '44',
-        name: 'oldName4',
-        facebookId: 'oldFacebook4',
-        email: 'oldEmail4',
-        appleId: 'oldAppleId4',
-        googleId: 'oldGoogleId4',
-        gotPopup: false,
-        pushAvailable: false,
-        messages: null,
-        purchases: null,
-        created: new Date('2024-02-20T18:15:15.977Z'),
-        statistic: null,
-      },
-    ];
-
-    const newPurcahseData = [
-      {
-        id: 1,
-        purchaseToken: '1',
-        userId: 1,
-        user: newUserData.find((user) => user.id === 1),
-        bundleKey: 'gibsish',
-        orderId: '7',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-      {
-        id: 2,
-        purchaseToken: '2',
-        userId: 1,
-        user: newUserData.find((user) => user.id === 1),
-        bundleKey: 'gibsish',
-        orderId: '8',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-      {
-        id: 3,
-        purchaseToken: '3',
-        userId: 4,
-        user: newUserData.find((user) => user.id === 4),
-        bundleKey: 'new gibsish',
-        orderId: '9',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-      {
-        id: 4,
-        purchaseToken: '4',
-        userId: 2,
-        user: newUserData.find((user) => user.id === 2),
-        bundleKey: 'new gibsish',
-        orderId: '10',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-      {
-        id: 5,
-        purchaseToken: '5',
-        userId: 4,
-        user: newUserData.find((user) => user.id === 4),
-        bundleKey: 'new gibsish',
-        orderId: '11',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-      {
-        id: 6,
-        purchaseToken: '6',
-        userId: 5,
-        user: newUserData.find((user) => user.id === 5),
-        bundleKey: 'new gibsish',
-        orderId: '12',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-    ];
-
-    const oldPurcahseData = [
-      {
-        id: 1,
-        purchaseToken: '7',
-        userId: 1,
-        user: oldUserData.find((user) => user.id === 1),
-        bundleKey: 'gibsish',
-        orderId: '1',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-      {
-        id: 2,
-        purchaseToken: '8',
-        userId: 1,
-        user: oldUserData.find((user) => user.id === 1),
-        bundleKey: 'gibsish',
-        orderId: '2',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-      {
-        id: 3,
-        purchaseToken: '9',
-        userId: 4,
-        user: oldUserData.find((user) => user.id === 4),
-        bundleKey: 'new gibsish',
-        orderId: '3',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-      {
-        id: 4,
-        purchaseToken: '10',
-        userId: 2,
-        user: oldUserData.find((user) => user.id === 2),
-        bundleKey: 'new gibsish',
-        orderId: '4',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-      {
-        id: 5,
-        purchaseToken: '11',
-        userId: 4,
-        user: oldUserData.find((user) => user.id === 4),
-        bundleKey: 'new gibsish',
-        orderId: '5',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-      {
-        id: 6,
-        purchaseToken: '12',
-        userId: 4,
-        user: oldUserData.find((user) => user.id === 4),
-        bundleKey: 'new gibsish',
-        orderId: '6',
-        orderPayload: 'hahahahahaha',
-        valid: new Date('2024-02-20T18:15:15.977Z'),
-        created: new Date('2024-02-20T18:15:15.977Z'),
-      },
-    ];
-
-    const users = {
-      newUserData: newUserData,
-      oldUserData: oldUserData,
-    };
-
-    const testPurchases = {
-      newPurcahseData: newPurcahseData,
-      oldPurcahseData: oldPurcahseData,
-    };
-
-    if (users) {
-      const newOriginal = users.newUserData.filter(
-        (user) => user.szotarId !== '',
-      );
-      userResponse = [...newOriginal];
-
-      const trueOldUsers = users.oldUserData.filter(
-        (user) =>
-          !newOriginal.some((newOri) => newOri.szotarId === user.szotarId),
-      );
-
-      const cleanOldUsers = trueOldUsers
-        .map((tou, index) => {
-          if (tou.szotarId.length > 0) {
-            const updatedUser = {
-              ...tou,
-              id: userResponse[userResponse.length - 1].id + index + 1,
-            };
-            return updatedUser;
-          }
-          return false;
-        })
-        .filter(Boolean);
-      userResponse = [...userResponse, ...cleanOldUsers];
-
-      return userResponse;
-    }
 
     // //!User
     const newOriginal = await this.newDictionaryUserRepository.find({
@@ -416,25 +96,6 @@ export class AppService {
     });
 
     await this.testDictionaryUserRepository.save([...cleanOldUsers]);
-
-    if (testPurchases) {
-      let response = [];
-      const newPurchases = testPurchases.newPurcahseData;
-      response = [...newPurchases];
-
-      const oldPurchases = testPurchases.oldPurcahseData.filter(
-        (op) => !newPurchases.some((newOri) => newOri.orderId === op.orderId),
-      );
-
-      for (const op of oldPurchases) {
-        delete op.id;
-        const oldUser = users.oldUserData.find((ou) => ou.id === op.userId);
-        const us = userResponse.find((ur) => ur.szotarId === oldUser.szotarId);
-        response = [...response, { ...op, userId: us.id, user: us }];
-      }
-
-      return response;
-    }
 
     // //!Purchase
 
@@ -573,5 +234,55 @@ export class AppService {
         user: oldUser,
       });
     }
+  }
+
+  getUsersTest(users) {
+    let userResponse = [];
+    const newOriginal = users.newUserData.filter(
+      (user) => user.szotarId !== '',
+    );
+    userResponse = [...newOriginal];
+
+    const trueOldUsers = users.oldUserData.filter(
+      (user) =>
+        !newOriginal.some((newOri) => newOri.szotarId === user.szotarId),
+    );
+
+    const cleanOldUsers = trueOldUsers
+      .map((tou, index) => {
+        if (tou.szotarId.length > 0) {
+          const updatedUser = {
+            ...tou,
+            id: userResponse[userResponse.length - 1].id + index + 1,
+          };
+          return updatedUser;
+        }
+        return false;
+      })
+      .filter(Boolean);
+    userResponse = [...userResponse, ...cleanOldUsers];
+
+    return userResponse;
+  }
+
+  getPurchasesTest(testPurchases, users, expectedResultForUsers) {
+    let response = [];
+    const newPurchases = testPurchases.newPurcahseData;
+    response = [...newPurchases];
+
+    const oldPurchases = testPurchases.oldPurcahseData.filter(
+      (op) => !newPurchases.some((newOri) => newOri.orderId === op.orderId),
+    );
+
+    for (const op of oldPurchases) {
+      delete op.id;
+      const oldUser = users.oldUserData.find((ou) => ou.id === op.userId);
+      const us = expectedResultForUsers.find(
+        (ur) => ur.szotarId === oldUser.szotarId,
+      );
+      response = [...response, { ...op, userId: us.id, user: us }];
+    }
+
+    return response;
   }
 }
