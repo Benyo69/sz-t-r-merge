@@ -28,6 +28,7 @@ import { MigrationModule } from './migration.module';
             oldEntities.DictionaryUser,
             oldEntities.PushMessage,
             oldEntities.Statistic,
+            oldEntities.UserActivity,
           ],
         };
       },
@@ -51,6 +52,7 @@ import { MigrationModule } from './migration.module';
             newEntities.DictionaryUser,
             newEntities.PushMessage,
             newEntities.Statistic,
+            newEntities.UserActivity,
           ],
         };
       },
@@ -74,6 +76,7 @@ import { MigrationModule } from './migration.module';
             testEntities.DictionaryUser,
             testEntities.PushMessage,
             testEntities.Statistic,
+            testEntities.UserActivity,
           ],
         };
       },
