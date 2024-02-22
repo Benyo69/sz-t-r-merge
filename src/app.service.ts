@@ -286,25 +286,23 @@ export class AppService {
     return response;
   }
 
-  getPushMessagesTest(testPushMessages, expectedResultForUsers) {
+  getPushMessagesTest(testPushes, expectedResultForUsers) {
     let response = [];
-    const newPushMessages = testPushMessages.newPushData;
+    const newPushMessages = testPushes.newPushData;
     response = [...newPushMessages];
 
-    const pushesBeforeFirstNew = testPushMessages.oldPushData.filter(
+    const pushesBeforeFirstNew = testPushes.oldPushData.filter(
       (opm) => opm.created.getTime() < newPushMessages[0].created.getTime(),
     );
 
     for (const pbfn of pushesBeforeFirstNew) {
       delete pbfn.id;
-      const userSzotarIds = pbfn.users.map((u) => u.szotarId);
-      const newUsers = expectedResultForUsers.find((user) =>
+      const newUsers = expectedResultForUsers.filter((user) =>
         pbfn.users.some((u) => u.szotarId === user.szotarId),
       );
 
-      const openedUserIds = pbfn.openedUsers.map((ou) => ou.szotarId);
-      const newOpenedUsers = expectedResultForUsers.find((user) =>
-        openedUserIds.include(user.szotarId),
+      const newOpenedUsers = expectedResultForUsers.filter((user) =>
+        pbfn.openedUsers.some((ou) => ou.szotarId === user.szotarId),
       );
 
       response = [
@@ -316,6 +314,7 @@ export class AppService {
         },
       ];
     }
+    return response;
   }
 
   getStatsTest(testStats, expectedResultForUsers) {
@@ -330,7 +329,7 @@ export class AppService {
     for (const sbfn of statsBeforeFirstNew) {
       delete sbfn.id;
 
-      const newUsers = expectedResultForUsers.find((user) =>
+      const newUsers = expectedResultForUsers.filter((user) =>
         sbfn.dictionaryUsers.some((u) => u.szotarId === user.szotarId),
       );
 
@@ -342,5 +341,6 @@ export class AppService {
         },
       ];
     }
+    return response;
   }
 }
