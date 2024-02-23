@@ -44,26 +44,26 @@ export class AppService {
 
   async getHello() {
     //!Delete existing one until testing
-    // const test = await this.testDictionaryUserRepository.find();
-    // for (const te of test) {
-    //   await this.testDictionaryUserRepository.delete(te.id);
-    // }
-    // const testP = await this.testPurchaseRepository.find();
-    // for (const te of testP) {
-    //   await this.testPurchaseRepository.delete(te.id);
-    // }
+    const test = await this.testDictionaryUserRepository.find();
+    for (const te of test) {
+      await this.testDictionaryUserRepository.delete(te.id);
+    }
+    const testP = await this.testPurchaseRepository.find();
+    for (const te of testP) {
+      await this.testPurchaseRepository.delete(te.id);
+    }
 
-    // const testPu = await this.testPushRepository.find();
-    // for (const te of testPu) {
-    //   await this.testPushRepository.delete(te.id);
-    // }
+    const testPu = await this.testPushRepository.find();
+    for (const te of testPu) {
+      await this.testPushRepository.delete(te.id);
+    }
 
-    // const testSta = await this.testStatRepository.find();
-    // for (const te of testSta) {
-    //   await this.testStatRepository.delete(te.id);
-    // }
+    const testSta = await this.testStatRepository.find();
+    for (const te of testSta) {
+      await this.testStatRepository.delete(te.id);
+    }
 
-    // //!User
+    //!User;
     const newOriginal = await this.newDictionaryUserRepository.find({
       where: { szotarId: Not('') },
     });
@@ -97,9 +97,11 @@ export class AppService {
 
     await this.testDictionaryUserRepository.save([...cleanOldUsers]);
 
-    // //!Purchase
+    //!Purchase
 
-    const newPurchases = await this.newPurchaseRepository.find();
+    const newPurchases = await this.newPurchaseRepository.find({
+      relations: ['user'],
+    });
 
     await this.testPurchaseRepository.save([...newPurchases]);
 
@@ -234,6 +236,69 @@ export class AppService {
         user: oldUser,
       });
     }
+
+    //!Delete double non usefull piece of shits
+
+    const usersWithDuplicateEmails = await this.testDictionaryUserRepository
+      .createQueryBuilder('user')
+      .select('szotarId')
+      .addGroupBy('szotarId')
+      .having('COUNT(szotarId) > 1')
+      .getRawMany();
+
+    const szotarId = usersWithDuplicateEmails.map((result) => result.szotarId);
+
+    const newDuplicatedUsers = await this.testDictionaryUserRepository.find({
+      where: {
+        szotarId: In(szotarId),
+      },
+      relations: ['purchases'],
+    });
+
+    const erradicateUsers = [];
+
+    for (const x of newDuplicatedUsers) {
+      const sameUsers = newDuplicatedUsers.filter(
+        (user) => user.szotarId === x.szotarId,
+      );
+
+      const userWithPurchase = sameUsers.filter(
+        (su) => su.purchases.length > 0,
+      );
+      const usersWithGotPopup = sameUsers.filter((su) => su.gotPopup);
+
+      if (userWithPurchase.length > 0) {
+        const purchasedUserIds = userWithPurchase.map((uwp) => uwp.id);
+        const usersWithoutPurchase = sameUsers.filter(
+          (su) => !purchasedUserIds.includes(su.id),
+        );
+        erradicateUsers.push(...usersWithoutPurchase);
+      } else if (usersWithGotPopup.length > 0) {
+        const gotPopupIds = usersWithGotPopup.map((uwp) => uwp.id);
+
+        const usersWithoutPopup = sameUsers.filter(
+          (su) => !gotPopupIds.includes(su.id),
+        );
+
+        if (usersWithoutPopup.length > 0) {
+          erradicateUsers.push(...usersWithoutPopup);
+        } else {
+          const usersPopup = sameUsers
+            .filter((su) => gotPopupIds.includes(su.id))
+            .sort((a, b) => a.id - b.id)
+            .slice(1);
+          if (usersPopup.length > 0) erradicateUsers.push(...usersPopup);
+        }
+      } else {
+        erradicateUsers.push(...sameUsers.sort((a, b) => a.id - b.id).slice(1));
+      }
+    }
+
+    await this.testDictionaryUserRepository.delete([
+      ...erradicateUsers.map((eru) => eru.id),
+    ]);
+
+    return 'yaaaay';
   }
 
   getUsersTest(users) {
@@ -342,5 +407,19 @@ export class AppService {
       ];
     }
     return response;
+  }
+
+  async getHell() {
+    const newEmails = await this.newDictionaryUserRepository.find({
+      select: ['email'],
+    });
+
+    const em = newEmails.map((u) => u.email);
+    const sameEmails = await this.oldDictionaryUserRepository.find({
+      where: { email: In(em) },
+      select: ['email'],
+    });
+
+    return sameEmails;
   }
 }
