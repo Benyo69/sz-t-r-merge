@@ -298,6 +298,13 @@ export class AppService {
       ...erradicateUsers.map((eru) => eru.id),
     ]);
 
+    const query = `
+        ALTER TABLE dictionary_user
+        ADD CONSTRAINT UQ_szotarId UNIQUE (szotarId)
+      `;
+
+    await this.testDictionaryUserRepository.query(query);
+
     return 'yaaaay';
   }
 
