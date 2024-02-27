@@ -8,7 +8,7 @@ async function bootstrap() {
   const appService = app.get(AppService);
 
   console.log('migration started');
-  await appService.getHello();
+  await appService.migration();
 
   console.log('migration completed');
 

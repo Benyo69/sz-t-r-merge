@@ -30,7 +30,7 @@ export class AppService {
     private readonly newActivityRepository: Repository<NewEntities.UserActivity>,
   ) {}
 
-  async getHello() {
+  async migration() {
     //!User;
     const newOriginal = await this.newDictionaryUserRepository.find({
       where: { szotarId: Not('') },
@@ -304,9 +304,11 @@ export class AppService {
       }
     }
 
-    await this.newDictionaryUserRepository.delete([
-      ...erradicateUsers.map((eru) => eru.id),
-    ]);
+    if (erradicateUsers.length > 0) {
+      await this.newDictionaryUserRepository.delete([
+        ...erradicateUsers.map((eru) => eru.id),
+      ]);
+    }
 
     const query = `
         ALTER TABLE dictionary_user
