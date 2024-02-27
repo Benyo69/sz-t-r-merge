@@ -9,9 +9,4 @@ export class AppController {
   async getHello() {
     return this.appService.getHello();
   }
-
-  @Get('hell')
-  async getHell() {
-    return this.appService.getHell();
-  }
 }

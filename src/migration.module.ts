@@ -14,13 +14,6 @@ import {
   Statistic as Stat,
   UserActivity as UA,
 } from './new_db/entity';
-import {
-  DictionaryUser as TestDC,
-  Purchase as TestPR,
-  PushMessage as TestPM,
-  Statistic as TestStat,
-  UserActivity as TestUA,
-} from './test_db';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
 
@@ -34,10 +27,6 @@ import { AppController } from './app.controller';
       UserActivity,
     ]),
     TypeOrmModule.forFeature([PR, DC, PM, Stat, UA], 'secondaryDB'),
-    TypeOrmModule.forFeature(
-      [TestDC, TestPR, TestPM, TestStat, TestUA],
-      'thirdDB',
-    ),
   ],
   controllers: [AppController],
   providers: [AppService],

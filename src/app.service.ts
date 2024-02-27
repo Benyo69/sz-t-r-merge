@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as OldEntities from './old_db/entity';
 import * as NewEntities from './new_db/entity';
-import * as TestEntities from './test_db';
 
 @Injectable()
 export class AppService {
@@ -29,46 +28,15 @@ export class AppService {
     private readonly newStatRepository: Repository<NewEntities.Statistic>,
     @InjectRepository(NewEntities.UserActivity, 'secondaryDB')
     private readonly newActivityRepository: Repository<NewEntities.UserActivity>,
-
-    @InjectRepository(TestEntities.Purchase, 'thirdDB')
-    private readonly testPurchaseRepository: Repository<TestEntities.Purchase>,
-    @InjectRepository(TestEntities.DictionaryUser, 'thirdDB')
-    private readonly testDictionaryUserRepository: Repository<TestEntities.DictionaryUser>,
-    @InjectRepository(TestEntities.PushMessage, 'thirdDB')
-    private readonly testPushRepository: Repository<TestEntities.PushMessage>,
-    @InjectRepository(TestEntities.Statistic, 'thirdDB')
-    private readonly testStatRepository: Repository<TestEntities.Statistic>,
-    @InjectRepository(TestEntities.UserActivity, 'thirdDB')
-    private readonly testActivityRepository: Repository<TestEntities.UserActivity>,
   ) {}
 
   async getHello() {
-    //!Delete existing one until testing
-    const test = await this.testDictionaryUserRepository.find();
-    for (const te of test) {
-      await this.testDictionaryUserRepository.delete(te.id);
-    }
-    const testP = await this.testPurchaseRepository.find();
-    for (const te of testP) {
-      await this.testPurchaseRepository.delete(te.id);
-    }
-
-    const testPu = await this.testPushRepository.find();
-    for (const te of testPu) {
-      await this.testPushRepository.delete(te.id);
-    }
-
-    const testSta = await this.testStatRepository.find();
-    for (const te of testSta) {
-      await this.testStatRepository.delete(te.id);
-    }
-
     //!User;
     const newOriginal = await this.newDictionaryUserRepository.find({
       where: { szotarId: Not('') },
     });
 
-    await this.testDictionaryUserRepository.save([...newOriginal]);
+    // await this.testDictionaryUserRepository.save([...newOriginal]);
 
     const newIds = newOriginal.map((newOri) => newOri.szotarId);
 
@@ -95,15 +63,26 @@ export class AppService {
       }
     });
 
-    await this.testDictionaryUserRepository.save([...cleanOldUsers]);
-
+    // await this.testDictionaryUserRepository.save([...cleanOldUsers]);
+    for (const x of cleanOldUsers) {
+      const sanitizedValue = x.name?.replace(
+        /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
+        '',
+      );
+      const us = {
+        ...x,
+        name: sanitizedValue,
+      };
+      await this.newDictionaryUserRepository.save({ ...us });
+      // await this.newDictionaryUserRepository.save([...cleanOldUsers]);
+    }
     //!Purchase
 
     const newPurchases = await this.newPurchaseRepository.find({
       relations: ['user'],
     });
 
-    await this.testPurchaseRepository.save([...newPurchases]);
+    // await this.testPurchaseRepository.save([...newPurchases]);
 
     const newOrderIds = newPurchases.map((op) => op.orderId);
 
@@ -124,15 +103,26 @@ export class AppService {
       const oldUser = await this.oldDictionaryUserRepository.findOne({
         where: { id: purchase.userId },
       });
-      const us = await this.testDictionaryUserRepository.findOne({
+
+      const us = await this.newDictionaryUserRepository.findOne({
         where: { szotarId: oldUser.szotarId },
       });
 
-      await this.testPurchaseRepository.save({
+      // const us = await this.testDictionaryUserRepository.findOne({
+      //   where: { szotarId: oldUser.szotarId },
+      // });
+
+      await this.newPurchaseRepository.save({
         ...purchase,
         userId: us.id,
         user: us,
       });
+
+      // await this.testPurchaseRepository.save({
+      //   ...purchase,
+      //   userId: us.id,
+      //   user: us,
+      // });
     }
 
     //!Push
@@ -140,9 +130,9 @@ export class AppService {
       relations: ['users', 'openedUsers'],
     });
 
-    for (const te of newPushMessages) {
-      await this.testPushRepository.save({ ...te });
-    }
+    // for (const te of newPushMessages) {
+    //   await this.testPushRepository.save({ ...te });
+    // }
 
     const oldPushMessages = await this.oldPushRepository.find({
       relations: ['users', 'openedUsers'],
@@ -163,20 +153,32 @@ export class AppService {
 
     for (const pbfn of pushesBeforeFirstNew) {
       const userSzotarIds = pbfn.users.map((u) => u.szotarId);
-      const newUsers = await this.testDictionaryUserRepository.find({
+      const newUsers = await this.newDictionaryUserRepository.find({
         where: { szotarId: In(userSzotarIds) },
       });
+      // const newUsers = await this.testDictionaryUserRepository.find({
+      //   where: { szotarId: In(userSzotarIds) },
+      // });
 
       const openedUserIds = pbfn.openedUsers.map((ou) => ou.szotarId);
-      const newOpenedUsers = await this.testDictionaryUserRepository.find({
+      const newOpenedUsers = await this.newDictionaryUserRepository.find({
         where: { szotarId: In(openedUserIds) },
       });
+      // const newOpenedUsers = await this.testDictionaryUserRepository.find({
+      //   where: { szotarId: In(openedUserIds) },
+      // });
 
-      await this.testPushRepository.save({
+      await this.newPushRepository.save({
         ...pbfn,
         users: newUsers,
         openedUsers: newOpenedUsers,
       });
+
+      // await this.testPushRepository.save({
+      //   ...pbfn,
+      //   users: newUsers,
+      //   openedUsers: newOpenedUsers,
+      // });
     }
 
     //!Stat
@@ -184,9 +186,9 @@ export class AppService {
       relations: ['dictionaryUsers'],
     });
 
-    for (const te of newStats) {
-      await this.testStatRepository.save({ ...te });
-    }
+    // for (const te of newStats) {
+    //   await this.testStatRepository.save({ ...te });
+    // }
 
     const oldStats = await this.oldStatRepository.find({
       relations: ['dictionaryUsers'],
@@ -208,11 +210,16 @@ export class AppService {
 
     for (const sbfn of statsBeforeFirstNew) {
       const userSzotarIds = sbfn.dictionaryUsers.map((u) => u.szotarId);
-      const newUsers = await this.testDictionaryUserRepository.find({
+
+      const newUsers = await this.newDictionaryUserRepository.find({
         where: { szotarId: In(userSzotarIds) },
       });
 
-      await this.testStatRepository.save({
+      // const newUsers = await this.testDictionaryUserRepository.find({
+      //   where: { szotarId: In(userSzotarIds) },
+      // });
+
+      await this.newStatRepository.save({
         ...sbfn,
         dictionaryUsers: newUsers,
       });
@@ -226,20 +233,23 @@ export class AppService {
     const oldActivities = await this.oldActivityRepository.find();
 
     for (const oa of oldActivities) {
-      const oldUser = await this.testDictionaryUserRepository.findOne({
+      const oldUser = await this.newDictionaryUserRepository.findOne({
         where: { szotarId: String(oa.userId) },
       });
+      // const oldUser = await this.testDictionaryUserRepository.findOne({
+      //   where: { szotarId: String(oa.userId) },
+      // });
 
-      await this.testActivityRepository.save({
+      await this.newActivityRepository.save({
         ...oa,
         userId: Number(oldUser.szotarId),
         user: oldUser,
       });
     }
 
-    //!Delete double non usefull piece of shits
+    //!Delete double users
 
-    const usersWithDuplicateEmails = await this.testDictionaryUserRepository
+    const usersWithDuplicateEmails = await this.newDictionaryUserRepository
       .createQueryBuilder('user')
       .select('szotarId')
       .addGroupBy('szotarId')
@@ -248,7 +258,7 @@ export class AppService {
 
     const szotarId = usersWithDuplicateEmails.map((result) => result.szotarId);
 
-    const newDuplicatedUsers = await this.testDictionaryUserRepository.find({
+    const newDuplicatedUsers = await this.newDictionaryUserRepository.find({
       where: {
         szotarId: In(szotarId),
       },
@@ -294,7 +304,7 @@ export class AppService {
       }
     }
 
-    await this.testDictionaryUserRepository.delete([
+    await this.newDictionaryUserRepository.delete([
       ...erradicateUsers.map((eru) => eru.id),
     ]);
 
@@ -303,7 +313,7 @@ export class AppService {
         ADD CONSTRAINT UQ_szotarId UNIQUE (szotarId)
       `;
 
-    await this.testDictionaryUserRepository.query(query);
+    await this.newDictionaryUserRepository.query(query);
 
     return 'yaaaay';
   }
@@ -414,19 +424,5 @@ export class AppService {
       ];
     }
     return response;
-  }
-
-  async getHell() {
-    const newEmails = await this.newDictionaryUserRepository.find({
-      select: ['email'],
-    });
-
-    const em = newEmails.map((u) => u.email);
-    const sameEmails = await this.oldDictionaryUserRepository.find({
-      where: { email: In(em) },
-      select: ['email'],
-    });
-
-    return sameEmails;
   }
 }
